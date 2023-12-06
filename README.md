@@ -15,6 +15,8 @@ Just is a task/command/recipe runner. It's a single binary with no dependencies.
 
 [Read more](https://github.com/casey/just) about it on their github page.
 
+[justfile grammar](https://github.com/casey/just/blob/master/GRAMMAR.md)
+
 # Roadmap
 
 * [x] syntax highlighting

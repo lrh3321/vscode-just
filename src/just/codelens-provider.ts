@@ -32,13 +32,13 @@ export class CodelensProvider implements vscode.CodeLensProvider {
                 const line = document.lineAt(document.positionAt(matches.index).line);
                 const indexOf = line.text.indexOf(matches[0]);
                 if (matches[0].lastIndexOf(":=") >= matches[0].lastIndexOf(":")) {
-                    continue
+                    continue;
                 }
                 const position = new vscode.Position(line.lineNumber, indexOf);
                 const range = document.getWordRangeAtPosition(position, new RegExp(this.regex));
                 if (range) {
                     const recipe = parseRecipe(matches[0]);
-                    recipe.justfile = document.fileName
+                    recipe.justfile = document.fileName;
                     this.codeLenses.push(new CodeLens(range, {
                         title: "Run Recipe",
                         tooltip: "Run Recipe with default default parameters",

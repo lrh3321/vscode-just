@@ -8,7 +8,7 @@
   "license": "MIT",
   "icon": "images/robot.png",
   "engines": {
-    "vscode": "^1.75.0"
+    "vscode": "^1.80.0"
   },
   "keywords": [
     "just",
@@ -20,6 +20,7 @@
     "launch"
   ],
   "repository": {
+    "type": "git",
     "url": "https://github.com/lrh3321/vscode-just.git"
   },
   "bugs": {
@@ -45,8 +46,8 @@
         "category": "Just"
       },
       {
-        "title": "%extension.disableCodelens.title%",
         "command": "just.disableCodeLens",
+        "title": "%extension.disableCodelens.title%",
         "category": "Just"
       }
     ],
@@ -70,7 +71,8 @@
           ".justfile",
           "Justfile",
           "JUSTFILE",
-          "*.justfile"
+          ".just",
+          ".justfile"
         ],
         "icon": {
           "dark": "./images/logo-dark.svg",
@@ -97,17 +99,24 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install",
+    "lint": "eslint ./src",
+    "lint-fix": "eslint ./src --fix",
     "test": "npm run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.10.3",
+    "@types/vscode": "^1.84.2",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.55.0",
+    "glob": "^8.1.0",
+    "js-yaml": "^4.1.0",
     "mocha": "^10.2.0",
-    "prettier": "^3.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2",
-    "vscode": "^1.1.37"
+    "vscode-test": "^1.6.1"
   },
   "dependencies": {
     "csv-parse": "^5.5.2",

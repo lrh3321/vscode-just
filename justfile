@@ -42,3 +42,6 @@ currentStatus := `git status -s | wc -l | awk '$1=$1'`
 @hello:
   echo "hello!"
 
+# update syntaxes/just.tmLanguage.json
+@tmLanguage:
+  npx js-yaml ./syntaxes/just.tmLanguage.yaml > ./syntaxes/just.tmLanguage.json

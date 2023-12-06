@@ -1,11 +1,9 @@
-import * as assert from 'assert'
-import * as vscode from 'vscode'
-import * as myExtension from '../extension'
+import * as assert from 'assert';
 
-const LAZY = true
+const LAZY = true;
 
 suite('just extension', () => {
   test('should i write tests?', () => {
-    assert.equal(LAZY, true)
-  })
-})
+    assert.equal(LAZY, true);
+  });
+});
