@@ -10,6 +10,16 @@ export interface Recipe {
    * A description of what the recipe does.
    */
   description?: string
+
+  justfile?: string
+
+  positionalArgs?: Array<PositionalArgs>
+  kwargs?: Map<string, string>
+}
+
+export interface PositionalArgs {
+  name: string
+  value?: string
 }
 
 /**

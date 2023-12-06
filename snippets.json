@@ -1,0 +1,47 @@
+{
+	"New Recipe": {
+		"prefix": "nrcp",
+		"body": [
+			"$1:",
+			"\t$2"
+		],
+		"description": "New Recipe"
+	},
+	"New Slient Recipe": {
+		"prefix": "nsrcp",
+		"body": [
+			"@$1:",
+			"\t$2"
+		],
+		"description": "New Slient Recipe"
+	},
+	"New Bash Recipe": {
+		"prefix": "nbrcp",
+		"body": [
+			"$1:",
+			"\t#!/usr/bin/env bash",
+			"\tset -euxo pipefail",
+			"\t",
+			"\t$2"
+		],
+		"description": "New Bash Recipe"
+	},
+	"New Python Recipe": {
+		"prefix": "nprcp",
+		"body": [
+			"$1:",
+			"\t#!/usr/bin/env python3",
+			"\t$2"
+		],
+		"description": "New Bash Recipe"
+	},
+	"New Node Recipe": {
+		"prefix": "nnrcp",
+		"body": [
+			"$1:",
+			"\t#!/usr/bin/env node",
+			"\t$2"
+		],
+		"description": "New Bash Recipe"
+	}
+}

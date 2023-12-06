@@ -19,6 +19,7 @@ Just is a task/command/recipe runner. It's a single binary with no dependencies.
 
 * [x] syntax highlighting
 * [x] run recipe
+* [x] codelens
 * [ ] pass arguments to recipes
 * [ ] choose a non-default justfile
 * [ ] tree extension showing recipies and dependencies

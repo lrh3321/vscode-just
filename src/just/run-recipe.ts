@@ -1,3 +1,4 @@
+// import { execa } from 'execa'
 import * as execa from 'execa'
 import { ExecaError } from 'execa'
 import { EOL } from 'os'
@@ -9,11 +10,18 @@ import { Recipe, RunRecipeResult } from '../types'
  */
 export async function runRecipe(recipe: Recipe): Promise<RunRecipeResult> {
   try {
+    const args = []
+    if (recipe.justfile) {
+      args.push('--justfile')
+      args.push(recipe.justfile)
+    }
+    args.push(recipe.name)
+
     // make the call to just
-    const execaResult = await execa('just', [recipe.name])
+    const execaResult = await execa('just', args)
 
     // successful call to the executable?
-    if (execaResult.code === 0) {
+    if (execaResult.exitCode === 0) {
       // split up the result
       return {
         kind: 'ok',
@@ -22,7 +30,7 @@ export async function runRecipe(recipe: Recipe): Promise<RunRecipeResult> {
     }
   } catch (e) {
     // runtime check for an execa error
-    if (e.cmd) {
+    if (e.command) {
       const error = e as ExecaError
 
       return {

@@ -1,5 +1,10 @@
-import { ExtensionContext, window, OutputChannel, commands } from 'vscode'
+import { ExtensionContext, window, OutputChannel, commands, languages, Disposable, workspace } from 'vscode'
 import { executeRunCommand } from './vscode/execute-run-command'
+import { CodelensProvider } from './just/codelens-provider';
+import { Recipe } from './types';
+import { executeRecipe } from './vscode/execute-recipe';
+
+let disposables: Disposable[] = [];
 
 /**
  * The channel we'll be writing our output to.
@@ -22,17 +27,41 @@ export function activate(context: ExtensionContext) {
   // the output channel we'll be writing to when we run tasks
   const outputChannel = window.createOutputChannel(OUTPUT_CHANNEL_NAME)
 
+  const codelensProvider = new CodelensProvider();
+
+  languages.registerCodeLensProvider("just", codelensProvider);
+
   // register a command which will allow us to run a recipe
   context.subscriptions.push(
     commands.registerCommand(RUN_RECIPE_COMMAND_KEY, async () => {
-      await executeRunCommand(outputChannel)
-    })
+      await executeRunCommand(outputChannel, window.activeTextEditor.document.fileName)
+    }),
+
+    commands.registerCommand("just.enableCodeLens", () => {
+      workspace.getConfiguration("just").update("enableCodeLens", true, true);
+    }),
+
+    commands.registerCommand("just.disableCodeLens", () => {
+      workspace.getConfiguration("just").update("enableCodeLens", false, true);
+    }),
+
+    commands.registerCommand("just.codelensAction", async (recipe?: Recipe) => {
+      if (recipe) {
+        outputChannel.appendLine(`CodeLens action clicked with justfile=${recipe.justfile} recipe=${recipe.name}`);
+        await executeRecipe(recipe, outputChannel)
+      }
+      // window.showInformationMessage(`CodeLens action clicked with args=${args}`);
+    }),
   )
+
 }
 
 /**
  * Fires when our extension dies.
  */
 export function deactivate() {
-  // nothing to do
+  if (disposables) {
+    disposables.forEach(item => item.dispose());
+  }
+  disposables = [];
 }

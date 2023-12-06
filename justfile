@@ -1,16 +1,16 @@
 # wonderful colors
-green  = "\\033[0;32m"
-cyan   = "\\033[0;36m"
-clear  = "\\033[0m"
+green  := "\\033[0;32m"
+cyan   := "\\033[0;36m"
+clear  := "\\033[0m"
 
 # the current version number in package.json
-currentVersion = `cat package.json | grep version | cut -d "\"" -f4`
+currentVersion := `cat package.json | grep version | cut -d "\"" -f4`
 
 # the current branch in git
-currentBranch = `git rev-parse --abbrev-ref HEAD`
+currentBranch := `git rev-parse --abbrev-ref HEAD`
 
 # the number of unstaged changes in git
-currentStatus = `git status -s | wc -l | awk '$1=$1'`
+currentStatus := `git status -s | wc -l | awk '$1=$1'`
 
 # lists the tasks (ensure this is task #1 in the list)
 @_list:

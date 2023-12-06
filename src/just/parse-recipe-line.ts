@@ -1,4 +1,5 @@
-import { Recipe } from '../types'
+import { PositionalArgs, Recipe } from '../types'
+import { parse } from 'csv-parse/sync';
 
 /**
  * Parse one of the lines when running `just --list` into a JustRecipe.
@@ -31,4 +32,43 @@ export function parseRecipeLine(value: string): Recipe {
 
   // return the goods
   return { name, description }
+}
+
+export function parseRecipe(value: string): Recipe {
+  if (value.startsWith("@")) {
+    value = value.substring(1)
+  }
+
+  const results = parse(value, { skip_empty_lines: true, autoParse: false, delimiter: ' ' }) as string[][]
+  if (results && results.length === 1) {
+    const result = results[0]
+    if (result.length > 0) {
+      let name = result.shift()
+      if (name.endsWith(':')) {
+        name = name.substring(0, name.length - 1)
+      }
+
+      let positionalArgs: Array<PositionalArgs>
+      let kwargs: Map<string, string>
+
+      while (result.length > 0) {
+        let s = result.shift()
+        if (s === ':') {
+          break
+        }
+
+        if (s.includes('=')) {
+
+        } else {
+          if (!positionalArgs) {
+            positionalArgs = []
+          }
+          positionalArgs.push({ name: s })
+        }
+      }
+
+      return { name: name, positionalArgs: positionalArgs, kwargs: kwargs }
+    }
+  }
+  return { name: "", }
 }

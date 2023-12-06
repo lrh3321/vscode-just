@@ -1,6 +1,5 @@
 import { window, OutputChannel, QuickPickItem } from 'vscode'
 import { getRecipes } from '../just/get-recipes'
-import { Recipe } from '../types'
 import { executeRecipe } from './execute-recipe'
 
 /**
@@ -8,9 +7,9 @@ import { executeRecipe } from './execute-recipe'
  *
  * @param outputChannel The output channel we'll write to.
  */
-export async function executeRunCommand(outputChannel: OutputChannel) {
+export async function executeRunCommand(outputChannel: OutputChannel, fileName?:string) {
   // get the commands
-  const result = await getRecipes()
+  const result = await getRecipes(fileName)
 
   // what kind of commands did we get?
   switch (result.kind) {

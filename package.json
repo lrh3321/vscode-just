@@ -2,13 +2,13 @@
   "name": "just",
   "displayName": "just",
   "description": "Provides syntax and recipe launcher for Just scripts.",
-  "version": "2.0.0",
-  "publisher": "skellock",
+  "version": "3.0.0",
+  "publisher": "lrh3321",
   "private": true,
   "license": "MIT",
   "icon": "images/robot.png",
   "engines": {
-    "vscode": "^1.18.0"
+    "vscode": "^1.75.0"
   },
   "keywords": [
     "just",
@@ -20,27 +20,44 @@
     "launch"
   ],
   "repository": {
-    "url": "https://github.com/skellock/vscode-just.git"
+    "url": "https://github.com/lrh3321/vscode-just.git"
   },
   "bugs": {
-    "url": "https://github.com/skellock/vscode-just/issues"
+    "url": "https://github.com/lrh3321/vscode-just/issues"
   },
-  "homepage": "https://github.com/skellock/vscode-just",
+  "homepage": "https://github.com/lrh3321/vscode-just",
   "categories": [
-    "Languages",
+    "Programming Languages",
+    "Snippets",
     "Other"
   ],
   "main": "./out/extension",
-  "activationEvents": [
-    "onCommand:just.run"
-  ],
   "contributes": {
     "commands": [
       {
         "command": "just.run",
-        "title": "Just: Run Recipe"
+        "title": "%extension.runRecipe.title%",
+        "category": "Just"
+      },
+      {
+        "command": "just.enableCodeLens",
+        "title": "%extension.enableCodeLens.title%",
+        "category": "Just"
+      },
+      {
+        "title": "%extension.disableCodelens.title%",
+        "command": "just.disableCodeLens",
+        "category": "Just"
       }
     ],
+    "configuration": {
+      "properties": {
+        "just.enableCodeLens": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
     "languages": [
       {
         "id": "just",
@@ -50,8 +67,15 @@
         ],
         "extensions": [
           "justfile",
-          "Justfile"
+          ".justfile",
+          "Justfile",
+          "JUSTFILE",
+          "*.justfile"
         ],
+        "icon": {
+          "dark": "./images/logo-dark.svg",
+          "light": "./images/logo-light.svg"
+        },
         "configuration": "./language-configuration.json"
       }
     ],
@@ -60,6 +84,12 @@
         "language": "just",
         "scopeName": "source.just",
         "path": "./syntaxes/just.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "just",
+        "path": "./snippets.json"
       }
     ]
   },
@@ -71,14 +101,16 @@
     "test": "npm run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "@types/execa": "^0.8.0",
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^7.0.43",
-    "prettier": "^1.9.1",
-    "typescript": "^2.6.1",
-    "vscode": "^1.1.6"
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.10.3",
+    "mocha": "^10.2.0",
+    "prettier": "^3.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2",
+    "vscode": "^1.1.37"
   },
   "dependencies": {
-    "execa": "^0.8.0"
+    "csv-parse": "^5.5.2",
+    "execa": "~5.1.0"
   }
 }
