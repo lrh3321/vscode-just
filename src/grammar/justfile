@@ -1,0 +1,3 @@
+
+default:
+    antlr4 -Dlanguage=Typescript just.g4

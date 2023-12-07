@@ -106,10 +106,11 @@
   "devDependencies": {
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.10.3",
-    "@types/vscode": "^1.84.2",
+    "@types/vscode": "^1.80.0",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
     "@vscode/test-electron": "^2.3.8",
+    "@vscode/vsce": "^2.22.0",
     "eslint": "^8.55.0",
     "glob": "^8.1.0",
     "js-yaml": "^4.1.0",
@@ -119,6 +120,7 @@
     "vscode-test": "^1.6.1"
   },
   "dependencies": {
+    "antlr4": "^4.13.1-patch-1",
     "csv-parse": "^5.5.2",
     "execa": "~5.1.0"
   }

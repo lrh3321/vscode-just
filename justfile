@@ -1,3 +1,8 @@
+
+set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+
+alias pack := package
+
 # wonderful colors
 green  := "\\033[0;32m"
 cyan   := "\\033[0;36m"
@@ -34,9 +39,13 @@ currentStatus := `git status -s | wc -l | awk '$1=$1'`
   git push
   git push --tags
 
+# package in local
+@package:
+  npx vsce package
+
 # releases on marketplace
 @publish:
-  vsce publish
+  npx vsce publish
 
 # This does nothing but echoes hello.
 @hello:

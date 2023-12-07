@@ -6,4 +6,6 @@ src/**
 .gitignore
 tsconfig.json
 vsc-extension-quickstart.md
-/syntaxes/just.tmLanguage.yaml
+syntaxes/just.tmLanguage.yaml
+example
+justfile
