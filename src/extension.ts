@@ -1,8 +1,10 @@
-import { ExtensionContext, window, OutputChannel, commands, languages, Disposable, workspace } from 'vscode';
+import { ExtensionContext, window, OutputChannel, commands, languages, Disposable, workspace, Task, tasks } from 'vscode';
 import { executeRunCommand } from './vscode/execute-run-command';
-import { CodelensProvider } from './just/codelens-provider';
+import { CodelensProvider } from './vscode/codelens-provider';
 import { Recipe } from './types';
 import { executeRecipe } from './vscode/execute-recipe';
+import { JustTaskProvider } from './vscode/justTask';
+import { setJustExecutable } from './just';
 
 let disposables: Disposable[] = [];
 
@@ -27,13 +29,23 @@ export function activate(context: ExtensionContext) {
   // the output channel we'll be writing to when we run tasks
   const outputChannel = window.createOutputChannel(OUTPUT_CHANNEL_NAME);
 
-  const codelensProvider = new CodelensProvider();
+  const justExe = workspace.getConfiguration("just").get('justExecutable', 'just');
+  setJustExecutable(justExe);
 
+  const codelensProvider = new CodelensProvider();
 
   // register a command which will allow us to run a recipe
   context.subscriptions.push(
 
     languages.registerCodeLensProvider("just", codelensProvider),
+    workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration('just')) {
+        const justExe = workspace.getConfiguration("just").get('justExecutable', 'just');
+        setJustExecutable(justExe);
+      }
+    }),
+
+    tasks.registerTaskProvider("just", new JustTaskProvider(workspace.workspaceFolders[0].uri.fsPath)),
 
     commands.registerCommand(RUN_RECIPE_COMMAND_KEY, async () => {
       await executeRunCommand(outputChannel, window.activeTextEditor.document.fileName);
@@ -52,7 +64,6 @@ export function activate(context: ExtensionContext) {
         outputChannel.appendLine(`CodeLens action clicked with justfile=${recipe.justfile} recipe=${recipe.name}`);
         await executeRecipe(recipe, outputChannel);
       }
-      // window.showInformationMessage(`CodeLens action clicked with args=${args}`);
     }),
   );
 

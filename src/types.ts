@@ -1,3 +1,5 @@
+import { JustDump, RecipeDump } from "./types-json";
+
 /**
  * A runnable just recipe.
  */
@@ -22,6 +24,17 @@ export interface PositionalArgs {
   value?: string
 }
 
+export interface GetRecipesError {
+  kind: 'no-recipes' | 'no-just-file' | 'no-just' | 'multiple-candidate' | 'just-parse-error' | 'unknown'
+  stdout?: string
+  stderr?: string
+}
+
+export interface GetRecipesOK {
+  kind: 'ok'
+  recipes: Recipe[]
+}
+
 /**
  * The types of results you can get frmo running a recipe.
  */
@@ -33,10 +46,7 @@ export type RunRecipeResult =
 /**
  * The types of results you can get from calling getCommands.
  */
-export type GetRecipesResult =
-  | { kind: 'ok'; recipes: Recipe[] }
-  | { kind: 'no-recipes' }
-  | { kind: 'no-just-file' }
-  | { kind: 'no-just' }
-  | { kind: 'just-parse-error' }
-  | { kind: 'unknown' }
+export type GetRecipesResult = GetRecipesOK
+  | GetRecipesError
+
+export { JustDump, RecipeDump };

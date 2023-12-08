@@ -21,7 +21,8 @@ Just is a task/command/recipe runner. It's a single binary with no dependencies.
 
 * [x] syntax highlighting
 * [x] run recipe
-* [x] codelens
+* [x] [CodeLens](https://code.visualstudio.com/api/references/vscode-api#CodeLensProvider)
+* [x] [Task Provider](https://code.visualstudio.com/api/extension-guides/task-provider)
 * [ ] pass arguments to recipes
 * [ ] choose a non-default justfile
 * [ ] tree extension showing recipies and dependencies

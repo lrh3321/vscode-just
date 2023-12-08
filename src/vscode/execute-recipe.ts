@@ -1,5 +1,5 @@
 import { OutputChannel } from 'vscode';
-import { runRecipe } from '../just/run-recipe';
+import { runRecipe } from '../just';
 import { Recipe } from '../types';
 
 /**

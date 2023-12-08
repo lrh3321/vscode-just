@@ -1,3 +1,8 @@
 {
-    "extension.runRecipe.title": "运行配方"
+    "extension.runRecipe.title": "运行配方",
+    "extension.enableCodeLens.title": "启用 CodeLens",
+    "extension.enableCodeLens.description": "启用/禁用通过 Code Lens 运行配方",
+    "extension.disableCodelens.title": "禁用 Codelens",
+    "extension.justExecutable.title": "Just 可执行文件",
+    "extension.justExecutable.description": "Just 可执行文件路径"
 }

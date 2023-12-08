@@ -1,3 +1,16 @@
+set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+# set positional-arguments
 
-default:
-    antlr4 -Dlanguage=Typescript just.g4
+files := "JustLexer.g4 JustParser.g4"
+
+# files := "Just.g4"
+
+gen language="TypeScript":
+    antlr4 -Dlanguage={{language}} {{ files }}
+
+gen_java:
+    just --justfile {{ justfile() }} gen Java
+    javac Just*.java
+
+gui:
+    grun Just justfile -gui justfile

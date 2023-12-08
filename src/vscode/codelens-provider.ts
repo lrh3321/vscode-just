@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { CancellationToken, CodeLens, ProviderResult } from 'vscode';
 import { Recipe } from "../types";
-import { parseRecipe } from './parse-recipe-line';
-
+import { parseRecipe } from '../just/parse-recipe-line';
+import { CharStream, CommonToken, CommonTokenStream, ParseTreeWalker } from 'antlr4';
 /**
  * CodelensProvider
  */
@@ -27,9 +27,19 @@ export class CodelensProvider implements vscode.CodeLensProvider {
             this.codeLenses = [];
             const regex = new RegExp(this.regex);
             const text = document.getText();
+
+
+
             let matches: RegExpExecArray | null;
             while ((matches = regex.exec(text)) !== null) {
+                if (matches[1] === 'set') {
+                    continue;
+                }
                 const line = document.lineAt(document.positionAt(matches.index).line);
+                if (!line.text.startsWith(matches[0])) {
+                    continue;
+                }
+
                 const indexOf = line.text.indexOf(matches[0]);
                 if (matches[0].lastIndexOf(":=") >= matches[0].lastIndexOf(":")) {
                     continue;
@@ -47,6 +57,8 @@ export class CodelensProvider implements vscode.CodeLensProvider {
                     }));
                 }
             }
+
+
             return this.codeLenses;
         }
         return [];

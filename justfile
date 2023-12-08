@@ -1,5 +1,4 @@
-
-set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+set windows-shell := ["bash.exe", "-uc"]
 
 alias pack := package
 
@@ -54,3 +53,9 @@ currentStatus := `git status -s | wc -l | awk '$1=$1'`
 # update syntaxes/just.tmLanguage.json
 @tmLanguage:
   npx js-yaml ./syntaxes/just.tmLanguage.yaml > ./syntaxes/just.tmLanguage.json
+
+@lint:
+  npm run lint
+
+@fix:
+  npm run lint-fix

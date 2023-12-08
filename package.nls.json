@@ -1,5 +1,8 @@
 {
     "extension.runRecipe.title": "Run Recipe",
     "extension.enableCodeLens.title": "Enable CodeLens",
-    "extension.disableCodelens.title": "Disable Codelens"
+    "extension.enableCodeLens.description": "Enable/disable code lens for run recipes",
+    "extension.disableCodelens.title": "Disable Codelens",
+    "extension.justExecutable.title": "Just Executable",
+    "extension.justExecutable.description": "The path to the just executable"
 }

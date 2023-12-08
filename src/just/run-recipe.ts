@@ -1,9 +1,8 @@
 // import { execa } from 'execa'
 import * as execa from 'execa';
 import { ExecaError } from 'execa';
-import { EOL } from 'os';
-import { cwd } from 'process';
 import { Recipe, RunRecipeResult } from '../types';
+import { getJustExecutable } from './exec';
 
 /**
  * Gets a list of commands you can run from a justfile.
@@ -12,13 +11,13 @@ export async function runRecipe(recipe: Recipe): Promise<RunRecipeResult> {
   try {
     const args = [];
     if (recipe.justfile) {
-      args.push('--justfile');
-      args.push(recipe.justfile);
+      args.push('--justfile', recipe.justfile);
     }
     args.push(recipe.name);
 
     // make the call to just
-    const execaResult = await execa('just', args);
+    const justExe = getJustExecutable();
+    const execaResult = await execa(justExe, args);
 
     // successful call to the executable?
     if (execaResult.exitCode === 0) {

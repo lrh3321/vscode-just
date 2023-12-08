@@ -55,7 +55,15 @@
       "properties": {
         "just.enableCodeLens": {
           "type": "boolean",
-          "default": true
+          "default": true,
+          "title": "%extension.enableCodeLens.title%",
+          "description": "%extension.enableCodeLens.description%"
+        },
+        "just.justExecutable": {
+          "type": "string",
+          "default": "just",
+          "title": "$extension.justExecutable.title%",
+          "description": "%extension.justExecutable.description%"
         }
       }
     },
@@ -88,6 +96,70 @@
         "path": "./syntaxes/just.tmLanguage.json"
       }
     ],
+    "taskDefinitions": [
+      {
+        "type": "just",
+        "properties": {
+          "recipe": {
+            "type": "string",
+            "default": "",
+            "description": "The recipe name"
+          },
+          "justfile": {
+            "type": "string",
+            "description": "The justfile containing the recipe",
+            "default": "Justfile",
+            "examples": [
+              "Justfile",
+              "justfile",
+              ".justfile"
+            ]
+          },
+          "variables": {
+            "type": "object",
+            "description": "Override <VARIABLE> with <VALUE>",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "args": {
+            "type": "array",
+            "description": "Override <VARIABLE> with <VALUE>",
+            "items": {
+              "type": "string"
+            }
+          },
+          "kwargs": {
+            "type": "object",
+            "description": "Override <VARIABLE> with <VALUE>",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "starParameter": {
+            "type": "array",
+            "description": "Override variadic <VARIABLE> with <VALUE>",
+            "items": {
+              "type": "string"
+            }
+          },
+          "shell": {
+            "type": "string",
+            "description": "Invoke <SHELL> to run recipes"
+          },
+          "shellArgs": {
+            "type": "array",
+            "description": "Invoke shell with <SHELL-ARG> as an argument",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recipe"
+        ]
+      }
+    ],
     "snippets": [
       {
         "language": "just",
@@ -116,8 +188,7 @@
     "js-yaml": "^4.1.0",
     "mocha": "^10.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.2",
-    "vscode-test": "^1.6.1"
+    "typescript": "^5.3.2"
   },
   "dependencies": {
     "antlr4": "^4.13.1-patch-1",
