@@ -1,11 +1,10 @@
-// import { execa } from 'execa'
 import * as execa from 'execa';
 import { ExecaError } from 'execa';
 import { EOL } from 'os';
 import { Recipe, GetRecipesResult, JustDump, RecipeDump, } from '../types';
 import { parseRecipeLine } from './parse-recipe-line';
-import path = require('path');
-import { getJustExecutable } from './exec';
+import path = require('path')
+import { execJust } from './exec';
 
 let jsonDumpSupported: boolean | undefined = undefined;
 
@@ -19,8 +18,9 @@ export async function getRecipes(justfile?: string, cwd?: string): Promise<GetRe
   const options = {};
 
   if (justfile) {
-    args.push('--justfile', path.basename(justfile));
-    options['cwd'] = path.dirname(justfile);
+    const dirname = path.dirname(justfile);
+    args.push('--working-directory', dirname, '--justfile', path.basename(justfile));
+    options['cwd'] = dirname;
   }
 
   if (cwd) {
@@ -81,7 +81,7 @@ export async function getRecipesWithJSONDump(args: string[], options?: execa.Opt
   args.push('--dump', '--dump-format', 'json');
 
   try {
-    const execaResult = await execa(getJustExecutable(), args, options);
+    const execaResult = await execJust(args, options);
 
     // successful call to the executable?
     if (execaResult.exitCode === 0) {
@@ -115,7 +115,7 @@ export async function getRecipesWithListDump(args: string[], options?: execa.Opt
   args.push('--list');
 
   try {
-    const execaResult = await execa(getJustExecutable(), args, options);
+    const execaResult = await execJust(args, options);
 
     // successful call to the executable?
     if (execaResult.exitCode === 0) {

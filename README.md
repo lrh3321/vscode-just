@@ -2,7 +2,7 @@
 
 A `Just` language syntax for colourizing your `justfile`s and running recipes.
 
-![Just in Code](images/just-demo.gif)
+![Just in Code](images/just-demo.webp)
 
 # Running A Recipe
 
@@ -23,6 +23,7 @@ Just is a task/command/recipe runner. It's a single binary with no dependencies.
 * [x] run recipe
 * [x] [CodeLens](https://code.visualstudio.com/api/references/vscode-api#CodeLensProvider)
 * [x] [Task Provider](https://code.visualstudio.com/api/extension-guides/task-provider)
+* [ ] [Semantic Token Provider](https://code.visualstudio.com/api/references/vscode-api#DocumentSemanticTokensProvider)
 * [ ] pass arguments to recipes
 * [ ] choose a non-default justfile
 * [ ] tree extension showing recipies and dependencies

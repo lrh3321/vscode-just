@@ -1,4 +1,25 @@
 {
+	"New Boolean Setting":{
+		"prefix": "setbl",
+		"body": [
+			"set ${1|allow-duplicate-recipes,dotenv-filename,dotenv-load,dotenv-path,export,fallback,ignore-comments,positional-arguments,windows-powershell|}"
+		],
+		"description": "New Boolean Setting"
+	},
+	"New String Setting":{
+		"prefix": "setstr",
+		"body": [
+			"set ${1|dotenv-filename,dotenv-path,tempdir|} := \"$2\""
+		],
+		"description": "New String Setting"
+	},
+	"Shell Setting":{
+		"prefix": "setsh",
+		"body": [
+			"set ${1|shell,windows-shell|} := [\"${2|bash,pwsh,zsh,sh,fish,nu,powershell|}\"]"
+		],
+		"description": "Set the command used to invoke recipes and evaluate backticks."
+	},
 	"New Recipe": {
 		"prefix": "nrcp",
 		"body": [

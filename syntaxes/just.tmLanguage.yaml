@@ -3,21 +3,30 @@ name: Just
 patterns:
   - include: '#interpolate'
   - include: '#comments'
-  - include: '#scripts'
+  - include: '#body'
   - include: '#strings'
   - include: '#assignments'
+  - include: '#alias'
   - include: '#recipeDefinition'
-  - include: '#keywords'
+  - include: '#functions'
+  - include: '#settings'
+  - include: '#attributes'
+  - name: keyword.control.shebang
+    begin: '#!'
+    end: '$'
+  - name: keyword.control.just
+    match: "\\b(else|export|false|if|true)\\b"
+  - name: keyword.operator.just
+    match: "\\B(:=|==|&&|\\+|/)\\B"
 repository:
   comments:
     patterns:
       - name: comment.line.just
         match: ^#[^!].*
-  scripts:
+  body:
     patterns:
-      - comment: 'The #! lines within a recipe.'
-        name: support.type.property-name.just
-        begin: \s#\!
+      - name: constant.other.just
+        begin: ^[\s\t]
         end: $
   strings:
     patterns:
@@ -32,42 +41,96 @@ repository:
         end: ''''
   assignments:
     patterns:
-      - match: ^(export[\s]?)?([a-zA-Z_][a-zA-Z0-9_-]*)=
+      - match: ^(export\s+)?([a-zA-Z_][a-zA-Z0-9_-]*)\s*(:=)\s*([a-zA-Z_][a-zA-Z0-9_-]*)
         captures:
           '1':
-            name: storage.type.just
+            name: keyword.control.just
           '2':
+            name: variable.name.just
+          '3':
+            name: keyword.operator.just
+          '4':
+            name: variable.name.just
+  alias:
+    patterns:
+      - match: ^(alias)\s+([a-zA-Z_][a-zA-Z0-9_-]*)\s*(:=)\s*([a-zA-Z_][a-zA-Z0-9_-]*)
+        captures:
+          '1':
+            name: keyword.control.just
+          '2':
+            name: variable.name.just
+          '3':
+            name: keyword.operator.just
+          '4':
             name: variable.name.just
   recipeDefinition:
     patterns:
       - match: >-
-          ^(@)?([a-zA-Z_][a-zA-Z0-9_-]*)([a-zA-Z0-9=\s_-`'"]*):([\sa-zA-Z0-9_-]*).*$
+          ^(@?[a-zA-Z_][a-zA-Z0-9_-]*)(\s+[a-zA-Z_][a-zA-Z0-9=\s_-`'"\{\}]*)*(\s+[\+\*]?[a-zA-Z_][a-zA-Z0-9=\s_-`'"\{\}]*)?:(\s*[a-zA-Z_][\sa-zA-Z0-9_-]*)*\s*$
         captures:
           '1':
-            name: entity.name.function.just
+            name: support.type.property-name.just
           '2':
             name: entity.name.function.just
           '3':
+            name: entity.name.function.just
             patterns:
               - name: constant.character.escape.just
-                match: '[\s]*[a-zA-Z0-9-_]*(=?)(.*)'
+                match: '\s+(\*|\+)?([a-zA-Z_][a-zA-Z0-9-_]*)(=?)([^\r\n]*)'
                 captures:
                   '0':
                     name: variable.name.just
-                  '1':
-                    name: constant.other.just
                   '2':
+                    name: variable.parameter.just
+                  '3':
+                    name: keyword.operator.just
+                  '4':
                     name: variable.parameter.just
           '4':
             name: support.type.property-name.just
+        name: emphasis
   interpolate:
     patterns:
       - name: string.interpolated.just
         begin: \{\{
         end: \}\}
-  keywords:
+        contentName: string.interpolated.just
+  functions:
     patterns:
-      - name: keyword.control.just
-        match: \b(arch|os|os_family|env_var|env_var_or_default)\b
+      - name: support.function.just.nullary
+        match: \b(arch|invocation_directory|invocation_directory_native|just_executable|justfile|justfile_directory|num_cpus|os|os_family|uuid)\b\s*\(\s*\)
+      - name: support.function.just.unary
+        match: \b(absolute_path|capitalize|clean|env_var|error|kebabcase|lowercamelcase|lowercase|parent_directory|path_exists|quote|extension|file_name|file_stem|sha256|sha256_file|shoutykebabcase|shoutysnakecase|snakecase|titlecase|trim|trim_end|trim_start|uppercamelcase|uppercase|without_extension)\b
+      - name: support.function.just.binary
+        match: \b(env_var_or_default|semver_matches|trim_end_match|trim_end_matches|trim_start_match|trim_start_matches)\b
+      - name: support.function.just.ternary
+        match: \b(replace|replace_regex)\b
+      - name: support.function.just.other
+        match: \b(env|join)\b
+  settings:
+    patterns:
+      - match: "(set)\\s+(allow\\-duplicate\\-recipes|dotenv\\-filename|dotenv\\-load|dotenv\\-path|export|fallback|ignore\\-comments|positional\\-arguments|windows\\-powershell)(\\s*:=\\s*)?"
+        captures:
+          '1': 
+            name: keyword.control.just
+          '2': 
+            name: keyword.other.boolean.just
+      - match: "(set)\\s+*(dotenv\\-filename|dotenv\\-path|tempdir)\\s*+:=\\s*"
+        captures:
+          '1': 
+            name: keyword.control.just
+          '2': 
+            name: keyword.other.string.just
+      - match: "(set)\\s+(shell|windows\\-shell)\\s*+:=\\s*"
+        captures:
+          '1': 
+            name: keyword.control.just
+          '2': 
+            name: keyword.other.shell.just
+  attributes:
+    patterns:
+      - match: "\\[([a-z\\-,\\s]*)]$"
+        captures:
+          '1': 
+            name: 'entity.other.attribute-name'
 scopeName: source.just
-

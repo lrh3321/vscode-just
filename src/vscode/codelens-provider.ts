@@ -1,71 +1,62 @@
-import * as vscode from 'vscode';
-import { CancellationToken, CodeLens, ProviderResult } from 'vscode';
-import { Recipe } from "../types";
+import { CancellationToken, CodeLens, ProviderResult, Disposable, workspace, CodeLensProvider, EventEmitter, Event, TextDocument, Position } from 'vscode';
 import { parseRecipe } from '../just/parse-recipe-line';
-import { CharStream, CommonToken, CommonTokenStream, ParseTreeWalker } from 'antlr4';
+
 /**
  * CodelensProvider
  */
-export class CodelensProvider implements vscode.CodeLensProvider {
+export class CodelensProvider implements CodeLensProvider, Disposable {
 
     private codeLenses: CodeLens[] = [];
     private regex: RegExp;
-    private _onDidChangeCodeLenses: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
-    public readonly onDidChangeCodeLenses: vscode.Event<void> = this._onDidChangeCodeLenses.event;
+    private disposable: Disposable | undefined;
+    private _onDidChangeCodeLenses: EventEmitter<void> = new EventEmitter<void>();
+    public readonly onDidChangeCodeLenses: Event<void> = this._onDidChangeCodeLenses.event;
 
     constructor() {
-        this.regex = /@?([\w\d_]+)\s?.*:+.*/g;
+        this.regex = /^@?([a-zA-Z_][a-zA-Z\d_-]*)\s*(\s+[+|*]?[a-zA-Z_][a-zA-Z\d_-]*(=.*)?)*\s*:(\s*[a-zA-Z_][a-zA-Z\d_-]*)*$/g;
 
-        vscode.workspace.onDidChangeConfiguration((_) => {
+        this.disposable = workspace.onDidChangeConfiguration((_) => {
             this._onDidChangeCodeLenses.fire();
         });
     }
 
-    public provideCodeLenses(document: vscode.TextDocument, token: CancellationToken): ProviderResult<CodeLens[]> {
+    dispose() {
+        if (this.disposable) {
+            this.disposable.dispose();
+            this.disposable = undefined;
+        }
+    }
 
-        if (vscode.workspace.getConfiguration("just").get("enableCodeLens", true)) {
+    public provideCodeLenses(document: TextDocument, token: CancellationToken): ProviderResult<CodeLens[]> {
+        if (workspace.getConfiguration("just").get("enableCodeLens", true)) {
             this.codeLenses = [];
-            const regex = new RegExp(this.regex);
-            const text = document.getText();
-
-
+            const regex = new RegExp(this.regex,);
 
             let matches: RegExpExecArray | null;
-            while ((matches = regex.exec(text)) !== null) {
-                if (matches[1] === 'set') {
-                    continue;
-                }
-                const line = document.lineAt(document.positionAt(matches.index).line);
-                if (!line.text.startsWith(matches[0])) {
-                    continue;
-                }
-
-                const indexOf = line.text.indexOf(matches[0]);
-                if (matches[0].lastIndexOf(":=") >= matches[0].lastIndexOf(":")) {
-                    continue;
-                }
-                const position = new vscode.Position(line.lineNumber, indexOf);
-                const range = document.getWordRangeAtPosition(position, new RegExp(this.regex));
-                if (range) {
-                    const recipe = parseRecipe(matches[0]);
-                    recipe.justfile = document.fileName;
-                    this.codeLenses.push(new CodeLens(range, {
-                        title: "Run Recipe",
-                        tooltip: "Run Recipe with default default parameters",
-                        command: "just.codelensAction",
-                        arguments: [recipe]
-                    }));
+            for (let lineNo = 0; lineNo < document.lineCount; lineNo++) {
+                const line = document.lineAt(lineNo);
+                while ((matches = regex.exec(line.text)) !== null) {
+                    const position = new Position(lineNo, 0);
+                    const range = document.getWordRangeAtPosition(position, new RegExp(this.regex));
+                    if (range) {
+                        const recipe = parseRecipe(matches[0]);
+                        recipe.justfile = document.fileName;
+                        this.codeLenses.push(new CodeLens(range, {
+                            title: "Run Recipe",
+                            tooltip: "Run Recipe with default default parameters",
+                            command: "just.codelensAction",
+                            arguments: [recipe]
+                        }));
+                    }
                 }
             }
-
-
             return this.codeLenses;
         }
         return [];
     }
 
-    public resolveCodeLens(codeLens: CodeLens, token: vscode.CancellationToken): ProviderResult<CodeLens> {
-        if (vscode.workspace.getConfiguration("just").get("enableCodeLens", true)) {
+    public resolveCodeLens(codeLens: CodeLens, token: CancellationToken): ProviderResult<CodeLens> {
+        if (workspace.getConfiguration("just").get("enableCodeLens", true)) {
             if (!codeLens.command) {
                 codeLens.command = {
                     title: "Run Recipe",

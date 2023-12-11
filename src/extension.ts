@@ -34,6 +34,8 @@ export function activate(context: ExtensionContext) {
 
   const codelensProvider = new CodelensProvider();
 
+  disposables.push(codelensProvider);
+
   // register a command which will allow us to run a recipe
   context.subscriptions.push(
 

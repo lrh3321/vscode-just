@@ -1,5 +1,5 @@
-import { getJustExecutable, setJustExecutable } from "./exec";
+import { execJust, getJustExecutable, setJustExecutable } from './exec';
 import { getRecipes } from "./get-recipes";
 import { runRecipe } from "./run-recipe";
 
-export { getJustExecutable, setJustExecutable, getRecipes, runRecipe };
+export {execJust, getJustExecutable, setJustExecutable, getRecipes, runRecipe };

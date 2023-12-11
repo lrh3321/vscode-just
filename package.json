@@ -173,7 +173,7 @@
     "watch": "tsc -watch -p ./",
     "lint": "eslint ./src",
     "lint-fix": "eslint ./src --fix",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    "test": "npm run compile && node ./out/test/runTest.js"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
@@ -193,6 +193,6 @@
   "dependencies": {
     "antlr4": "^4.13.1-patch-1",
     "csv-parse": "^5.5.2",
-    "execa": "~5.1.0"
+    "execa": "^5.1.1"
   }
 }
