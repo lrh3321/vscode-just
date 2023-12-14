@@ -115,6 +115,15 @@
               ".justfile"
             ]
           },
+          "workingDirectory": {
+            "type": "string",
+            "description": "The working directory",
+            "default": "${workspaceFolder}",
+            "examples": [
+              "${workspaceFolder}",
+              "./"
+            ]
+          },
           "variables": {
             "type": "object",
             "description": "Override <VARIABLE> with <VALUE>",
@@ -177,7 +186,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.10.3",
+    "@types/node": "^18.7.14",
     "@types/vscode": "^1.80.0",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
@@ -192,7 +201,6 @@
   },
   "dependencies": {
     "antlr4": "^4.13.1-patch-1",
-    "csv-parse": "^5.5.2",
-    "execa": "^5.1.1"
+    "csv-parse": "^5.5.2"
   }
 }

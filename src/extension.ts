@@ -1,17 +1,17 @@
 import { ExtensionContext, window, OutputChannel, commands, languages, Disposable, workspace, Task, tasks } from 'vscode';
 import { executeRunCommand } from './vscode/execute-run-command';
-import { CodelensProvider } from './vscode/codelens-provider';
+import { JustCodeLensProvider } from './vscode/codelens-provider';
 import { Recipe } from './types';
 import { executeRecipe } from './vscode/execute-recipe';
 import { JustTaskProvider } from './vscode/justTask';
 import { setJustExecutable } from './just';
 
-let disposables: Disposable[] = [];
-
 /**
  * The channel we'll be writing our output to.
  */
 const OUTPUT_CHANNEL_NAME = 'just';
+
+const languageID = 'just';
 
 /**
  * The command key for running a just recipe.
@@ -32,14 +32,14 @@ export function activate(context: ExtensionContext) {
   const justExe = workspace.getConfiguration("just").get('justExecutable', 'just');
   setJustExecutable(justExe);
 
-  const codelensProvider = new CodelensProvider();
-
-  disposables.push(codelensProvider);
+  const codelensProvider = new JustCodeLensProvider();
 
   // register a command which will allow us to run a recipe
   context.subscriptions.push(
+    outputChannel,
+    codelensProvider,
 
-    languages.registerCodeLensProvider("just", codelensProvider),
+    languages.registerCodeLensProvider(languageID, codelensProvider),
     workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('just')) {
         const justExe = workspace.getConfiguration("just").get('justExecutable', 'just');
@@ -47,7 +47,7 @@ export function activate(context: ExtensionContext) {
       }
     }),
 
-    tasks.registerTaskProvider("just", new JustTaskProvider(workspace.workspaceFolders[0].uri.fsPath)),
+    tasks.registerTaskProvider("just", new JustTaskProvider(workspace.workspaceFolders[0]?.uri?.fsPath)),
 
     commands.registerCommand(RUN_RECIPE_COMMAND_KEY, async () => {
       await executeRunCommand(outputChannel, window.activeTextEditor.document.fileName);
@@ -61,10 +61,10 @@ export function activate(context: ExtensionContext) {
       workspace.getConfiguration("just").update("enableCodeLens", false, true);
     }),
 
-    commands.registerCommand("just.codelensAction", async (recipe?: Recipe) => {
+    commands.registerCommand("just.codelensAction", async (recipe?: Recipe, workingDirectory?: string) => {
       if (recipe) {
         outputChannel.appendLine(`CodeLens action clicked with justfile=${recipe.justfile} recipe=${recipe.name}`);
-        await executeRecipe(recipe, outputChannel);
+        await executeRecipe(recipe, outputChannel, workingDirectory);
       }
     }),
   );
@@ -75,8 +75,4 @@ export function activate(context: ExtensionContext) {
  * Fires when our extension dies.
  */
 export function deactivate() {
-  if (disposables) {
-    disposables.forEach(item => item.dispose());
-  }
-  disposables = [];
 }

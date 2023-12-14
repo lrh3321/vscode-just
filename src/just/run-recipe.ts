@@ -1,22 +1,28 @@
-import { ExecaError } from 'execa';
 import { Recipe, RunRecipeResult } from '../types';
-import { execJust } from './exec';
+import { JustExecError, execJust } from './exec';
 import path = require('path')
 
 /**
  * Gets a list of commands you can run from a justfile.
  */
-export async function runRecipe(recipe: Recipe): Promise<RunRecipeResult> {
+export async function runRecipe(recipe: Recipe, workingDirectory?: string): Promise<RunRecipeResult> {
   try {
     const args = [];
+    const options = {};
     if (recipe.justfile) {
       const dirname = path.dirname(recipe.justfile);
-      args.push('--working-directory', dirname, '--justfile', path.basename(recipe.justfile));
+      if (workingDirectory) {
+        args.push('--working-directory', workingDirectory);
+      } else {
+        args.push('--working-directory', dirname);
+      }
+      args.push('--justfile', recipe.justfile);
+      options['cwd'] = dirname;
     }
     args.push(recipe.name);
 
     // make the call to just
-    const execaResult = await execJust(args);
+    const execaResult = await execJust(args, options);
 
     // successful call to the executable?
     if (execaResult.exitCode === 0) {
@@ -25,16 +31,20 @@ export async function runRecipe(recipe: Recipe): Promise<RunRecipeResult> {
         kind: 'ok',
         stdout: execaResult.stdout && execaResult.stdout.trim(),
       };
+    } else {
+      return {
+        kind: 'error',
+        stdout: execaResult.stdout,
+        stderr: execaResult.stderr,
+      };
     }
   } catch (e) {
     // runtime check for an execa error
-    if (e.command) {
-      const error = e as ExecaError;
-
+    if (e instanceof JustExecError) {
       return {
         kind: 'error',
-        stderr: error.stderr && error.stderr.trim(),
-        stdout: error.stdout && error.stdout.trim(),
+        // stderr: error.stderr && error.stderr.trim(),
+        stderr: e.message,
       };
     } else {
       return { kind: 'unknown' };

@@ -12,6 +12,8 @@ interface JustTaskDefinition extends TaskDefinition {
      */
     justfile?: string;
 
+    workingDirectory?: string;
+
     variables?: JustParameters;
     args?: string[];
     kwargs?: JustParameters;
@@ -91,6 +93,10 @@ export class JustTaskProvider implements TaskProvider {
 
         if (definition.justfile) {
             args.push('--justfile', definition.justfile);
+        }
+
+        if (definition.workingDirectory) {
+            args.push('--working-directory', definition.workingDirectory);
         }
 
         args.push(definition.recipe);

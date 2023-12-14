@@ -1,10 +1,8 @@
-import * as execa from 'execa';
-import { ExecaError } from 'execa';
 import { EOL } from 'os';
 import { Recipe, GetRecipesResult, JustDump, RecipeDump, } from '../types';
 import { parseRecipeLine } from './parse-recipe-line';
 import path = require('path')
-import { execJust } from './exec';
+import { JustExecError, execJust, execOptions } from './exec';
 
 let jsonDumpSupported: boolean | undefined = undefined;
 
@@ -19,7 +17,7 @@ export async function getRecipes(justfile?: string, cwd?: string): Promise<GetRe
 
   if (justfile) {
     const dirname = path.dirname(justfile);
-    args.push('--working-directory', dirname, '--justfile', path.basename(justfile));
+    args.push('--working-directory', dirname, '--justfile', justfile);
     options['cwd'] = dirname;
   }
 
@@ -30,7 +28,7 @@ export async function getRecipes(justfile?: string, cwd?: string): Promise<GetRe
   try {
     let recipes: Recipe[];
     if (typeof jsonDumpSupported === 'undefined' || jsonDumpSupported) {
-      recipes = await getRecipesWithJSONDump(args, options as execa.Options);
+      recipes = await getRecipesWithJSONDump(args, options);
     } else {
       recipes = await getRecipesWithListDump(args, options);
     }
@@ -76,7 +74,7 @@ export function parseDumpRecipes(lines: string[]): Recipe[] {
   }
 }
 
-export async function getRecipesWithJSONDump(args: string[], options?: execa.Options): Promise<Recipe[]> {
+export async function getRecipesWithJSONDump(args: string[], options?: execOptions): Promise<Recipe[]> {
   args = Array.from(args);
   args.push('--dump', '--dump-format', 'json');
 
@@ -101,16 +99,15 @@ export async function getRecipesWithJSONDump(args: string[], options?: execa.Opt
       return recipes;
     }
   } catch (e) {
-    // runtime check for an execa error
-    if (e.command) {
-      handleDumpExecaError(e as ExecaError);
+    if (e instanceof JustExecError) {
+      handleDumpExecaError(e);
     }
 
     throw { kind: 'unknown' };
   }
 }
 
-export async function getRecipesWithListDump(args: string[], options?: execa.Options): Promise<Recipe[]> {
+export async function getRecipesWithListDump(args: string[], options?: execOptions): Promise<Recipe[]> {
   args = Array.from(args);
   args.push('--list');
 
@@ -140,8 +137,8 @@ export async function getRecipesWithListDump(args: string[], options?: execa.Opt
     }
   } catch (e) {
     // runtime check for an execa error
-    if (e.command) {
-      handleDumpExecaError(e as ExecaError);
+    if (e instanceof JustExecError) {
+      handleDumpExecaError(e);
     }
 
     throw { kind: 'unknown' };
@@ -152,7 +149,11 @@ export async function getRecipesWithListDump(args: string[], options?: execa.Opt
  * runtime check for an execa error
  * @param error
  */
-function handleDumpExecaError(error: ExecaError): never {
+function handleDumpExecaError(error: JustExecError): never {
+  if (error instanceof JustExecError) {
+    throw { kind: error.kind || 'unknown', stderr: error.message };
+  }
+
   const { exitCode, stderr = '', stdout } = error;
 
   // different types of errors we know of
