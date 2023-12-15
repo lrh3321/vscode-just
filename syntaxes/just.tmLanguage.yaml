@@ -26,8 +26,8 @@ repository:
   body:
     patterns:
       - name: constant.other.just
-        begin: ^[\s\t]
-        end: $
+        begin: (^|\G)[\s\t]+
+        end: (^|\G)[\r\n]+$
   strings:
     patterns:
       - name: string.quoted.triple.just

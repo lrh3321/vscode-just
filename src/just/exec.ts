@@ -35,6 +35,8 @@ export interface execOptions {
 
 export class execResult {
     constructor(
+        public command: string,
+        public args: string[] | undefined,
         public exitCode: number,
         public stdout?: string,
         public stderr?: string,
@@ -42,7 +44,7 @@ export class execResult {
 }
 
 export async function execJust(args?: string[], options?: execOptions): Promise<execResult> {
-    const child = spawn(justExe, args, {});
+    const child = spawn(justExe, args, options);
     if (child.pid === undefined) {
 
         const err = await new Promise<JustExecError>((resolve, reject) => {
@@ -81,7 +83,7 @@ export async function execJust(args?: string[], options?: execOptions): Promise<
                     reject(new JustExecError(stderr, 'no-recipes'));
                 } else if (stderr.includes('error: Expected ')) {
                     reject(new JustExecError(stderr, 'just-parse-error'));
-                } 
+                }
                 return;
             }
             resolve(code);
@@ -89,7 +91,7 @@ export async function execJust(args?: string[], options?: execOptions): Promise<
 
     });
 
-    return new execResult(exitCode, stdout, stderr);
+    return new execResult(justExe, args, exitCode, stdout, stderr);
 }
 
 //  'no-just-file'  | 'just-parse-error' | 'unknown'

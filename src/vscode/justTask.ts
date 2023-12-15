@@ -12,12 +12,20 @@ interface JustTaskDefinition extends TaskDefinition {
      */
     justfile?: string;
 
+    /**
+     * Use <WORKING-DIRECTORY> as working directory. justfile must also be set
+     */
     workingDirectory?: string;
 
+    /**
+     * Override <VARIABLE> with <VALUE>
+     */
     variables?: JustParameters;
+    
+    /**
+     * Arguments
+     */
     args?: string[];
-    kwargs?: JustParameters;
-    starParameter?: string[];
 
     /**
      * Invoke <SHELL> to run recipes
@@ -106,23 +114,13 @@ export class JustTaskProvider implements TaskProvider {
         }
 
         if (definition.shellArgs && definition.shellArgs.length > 0) {
-            // TODO:
+            for (const arg of definition.shellArgs) {
+                args.push("--shell-arg", arg);
+            }
         }
 
         if (definition.args) {
             definition.args.forEach(arg => args.push(arg));
-        }
-
-        if (definition.kwargs) {
-            Object.entries<string | string[]>(definition.kwargs).forEach(kv => {
-                if (typeof kv[1] === 'string') {
-                    args.push(kv.join('='));
-                }
-            });
-        }
-
-        if (definition.starParameter) {
-            definition.starParameter.forEach(arg => args.push(arg));
         }
 
         const justExe = workspace.getConfiguration("just").get('justExecutable', 'just');

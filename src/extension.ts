@@ -1,10 +1,7 @@
-import { ExtensionContext, window, OutputChannel, commands, languages, Disposable, workspace, Task, tasks } from 'vscode';
-import { executeRunCommand } from './vscode/execute-run-command';
-import { JustCodeLensProvider } from './vscode/codelens-provider';
-import { Recipe } from './types';
-import { executeRecipe } from './vscode/execute-recipe';
-import { JustTaskProvider } from './vscode/justTask';
+import { ExtensionContext, window, commands, languages, workspace, tasks } from 'vscode';
+import { executeRunCommand, JustCodeLensProvider, executeRecipe, JustTaskProvider, JustDocumentFormattingEditProvider } from './vscode';
 import { setJustExecutable } from './just';
+import { Recipe } from './types';
 
 /**
  * The channel we'll be writing our output to.
@@ -40,6 +37,7 @@ export function activate(context: ExtensionContext) {
     codelensProvider,
 
     languages.registerCodeLensProvider(languageID, codelensProvider),
+    languages.registerDocumentFormattingEditProvider(languageID, new JustDocumentFormattingEditProvider()),
     workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('just')) {
         const justExe = workspace.getConfiguration("just").get('justExecutable', 'just');

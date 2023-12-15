@@ -59,8 +59,8 @@
       "patterns": [
         {
           "name": "constant.other.just",
-          "begin": "^[\\s\\t]",
-          "end": "$"
+          "begin": "(^|\\G)[\\s\\t]+",
+          "end": "(^|\\G)[\\r\\n]+$"
         }
       ]
     },

@@ -2,10 +2,14 @@ import { Recipe, RunRecipeResult } from '../types';
 import { JustExecError, execJust } from './exec';
 import path = require('path')
 
+export interface runRecipeOptions {
+  args?: string[]
+}
+
 /**
  * Gets a list of commands you can run from a justfile.
  */
-export async function runRecipe(recipe: Recipe, workingDirectory?: string): Promise<RunRecipeResult> {
+export async function runRecipe(recipe: Recipe, workingDirectory?: string, options?: runRecipeOptions): Promise<RunRecipeResult> {
   try {
     const args = [];
     const options = {};

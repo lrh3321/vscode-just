@@ -52,6 +52,7 @@
       }
     ],
     "configuration": {
+      "title": "Just",
       "properties": {
         "just.enableCodeLens": {
           "type": "boolean",
@@ -134,20 +135,6 @@
           "args": {
             "type": "array",
             "description": "Override <VARIABLE> with <VALUE>",
-            "items": {
-              "type": "string"
-            }
-          },
-          "kwargs": {
-            "type": "object",
-            "description": "Override <VARIABLE> with <VALUE>",
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "starParameter": {
-            "type": "array",
-            "description": "Override variadic <VARIABLE> with <VALUE>",
             "items": {
               "type": "string"
             }

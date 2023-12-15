@@ -14,7 +14,7 @@ export async function executeRecipe(recipe: Recipe, outputChannel: OutputChannel
   outputChannel.appendLine(`🤖 Running: just ${recipe.name}, justfile: ${recipe.justfile}`);
 
   // run the command
-  const runResult = await runRecipe(recipe, workingDirectory );
+  const runResult = await runRecipe(recipe, workingDirectory);
 
   switch (runResult.kind) {
     // we ran it successfully
