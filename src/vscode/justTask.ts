@@ -21,7 +21,7 @@ interface JustTaskDefinition extends TaskDefinition {
      * Override <VARIABLE> with <VALUE>
      */
     variables?: JustParameters;
-    
+
     /**
      * Arguments
      */
@@ -45,8 +45,13 @@ interface JustParameters {
 export class JustTaskProvider implements TaskProvider {
     private tasks: Task[] | undefined;
     private justfile: string | undefined;
+    private workspaceRoot?: string;
 
-    constructor(private workspaceRoot: string) { }
+    constructor() { 
+        if (workspace.workspaceFolders) {
+            this.workspaceRoot = workspace.workspaceFolders[0]?.uri?.fsPath;
+        }
+    }
 
     provideTasks(token: CancellationToken): ProviderResult<Task[]> {
         try {
@@ -70,7 +75,7 @@ export class JustTaskProvider implements TaskProvider {
         return undefined;
     }
 
-    async getTasks(): Promise<Task[]> {
+    async getTasks(): Promise<Task[] | undefined> {
         if (this.tasks !== undefined) {
             return this.tasks;
         }
@@ -126,7 +131,7 @@ export class JustTaskProvider implements TaskProvider {
         const justExe = workspace.getConfiguration("just").get('justExecutable', 'just');
         return new Task(
             definition,
-            source ? source.scope : TaskScope.Workspace,
+            source?.scope || TaskScope.Workspace,
             definition.recipe,
             'just',
             new ProcessExecution(justExe, args, { cwd: this.workspaceRoot }),

@@ -44,30 +44,35 @@ export function parseRecipe(value: string): Recipe {
     const result = results[0];
     if (result.length > 0) {
       let name = result.shift();
-      if (name.endsWith(':')) {
-        name = name.substring(0, name.length - 1);
-      }
-
-      let positionalArgs: Array<PositionalArgs>;
-      let kwargs: Map<string, string>;
-
-      while (result.length > 0) {
-        const s = result.shift();
-        if (s === ':') {
-          break;
+      if (name) {
+        if (name.endsWith(':')) {
+          name = name.substring(0, name.length - 1);
         }
 
-        if (s.includes('=')) {
-          // TODO: impl
-        } else {
-          if (!positionalArgs) {
-            positionalArgs = [];
+        let positionalArgs: Array<PositionalArgs> = [];
+        const kwargs: Map<string, string> = new Map();
+
+        while (result.length > 0) {
+          const s = result.shift();
+          if (!s) {
+            continue;
           }
-          positionalArgs.push({ name: s });
-        }
-      }
+          if (s === ':') {
+            break;
+          }
 
-      return { name: name, positionalArgs: positionalArgs, kwargs: kwargs };
+          if (s.includes('=')) {
+            // TODO: impl
+          } else {
+            if (!positionalArgs) {
+              positionalArgs = [];
+            }
+            positionalArgs.push({ name: s });
+          }
+        }
+
+        return { name: name, positionalArgs: positionalArgs, kwargs: kwargs };
+      }
     }
   }
   return { name: "", };

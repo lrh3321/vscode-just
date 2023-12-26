@@ -2,9 +2,14 @@
 import * as assert from 'assert';
 import { describe, it } from "mocha";
 import { parseRecipe } from '../just/parse-recipe-line';
+import { execJust } from '../just';
 
 
 suite('just lib', () => {
+    test('test execJust',async ()=>{
+        await execJust(['-f',"a"]);
+    });
+
     test('test parseRecipe no args', () => {
         assert.equal(parseRecipe("default:").name, 'default');
 

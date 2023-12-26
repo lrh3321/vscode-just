@@ -7,15 +7,14 @@ import { executeRecipe } from './execute-recipe';
  *
  * @param outputChannel The output channel we'll write to.
  */
-export async function executeRunCommand(outputChannel: OutputChannel, fileName?:string) {
+export async function executeRunCommand(outputChannel: OutputChannel, fileName?: string) {
   // get the commands
   const result = await getRecipes(fileName);
 
   // what kind of commands did we get?
   switch (result.kind) {
     case 'ok': {
-      // this is here to coerce typescript (no pattern matching ftl)
-      const commands = result.kind === 'ok' && result.recipes;
+      const commands = result.recipes;
 
       // convert to a vscode quick pick list
       const qpCommands: QuickPickItem[] = commands.map(x => ({
@@ -30,7 +29,9 @@ export async function executeRunCommand(outputChannel: OutputChannel, fileName?:
       if (qp) {
         // lookup the command
         const command = commands.find(x => x.name === qp.label);
-        executeRecipe(command, outputChannel);
+        if (command) {
+          executeRecipe(command, outputChannel);
+        }
       }
 
       break;

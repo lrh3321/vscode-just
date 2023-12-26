@@ -15,7 +15,7 @@ export class JustDocumentFormattingEditProvider implements DocumentFormattingEdi
                 document.lineAt(document.lineCount - 1).range.end,
             );
 
-            return [TextEdit.replace(wholeRange, result.stdout)];
+            return [TextEdit.replace(wholeRange, result.stdout || '')];
         }
 
         return [];

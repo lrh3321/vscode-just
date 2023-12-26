@@ -86,9 +86,8 @@ export async function execJust(args?: string[], options?: execOptions): Promise<
                 }
                 return;
             }
-            resolve(code);
+            resolve(code || 1);
         });
-
     });
 
     return new execResult(justExe, args, exitCode, stdout, stderr);

@@ -45,10 +45,10 @@ export function activate(context: ExtensionContext) {
       }
     }),
 
-    tasks.registerTaskProvider("just", new JustTaskProvider(workspace.workspaceFolders[0]?.uri?.fsPath)),
+    tasks.registerTaskProvider("just", new JustTaskProvider()),
 
     commands.registerCommand(RUN_RECIPE_COMMAND_KEY, async () => {
-      await executeRunCommand(outputChannel, window.activeTextEditor.document.fileName);
+      await executeRunCommand(outputChannel, window?.activeTextEditor?.document?.fileName);
     }),
 
     commands.registerCommand("just.enableCodeLens", () => {

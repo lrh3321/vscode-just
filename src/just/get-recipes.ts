@@ -12,7 +12,7 @@ let jsonDumpSupported: boolean | undefined = undefined;
  */
 export async function getRecipes(justfile?: string, cwd?: string): Promise<GetRecipesResult> {
   // make the call to just
-  const args = [];
+  const args: string[] = [];
   const options = {};
 
   if (justfile) {
@@ -40,6 +40,7 @@ export async function getRecipes(justfile?: string, cwd?: string): Promise<GetRe
     }
     console.error(e);
   }
+  return { kind: 'unknown' };
 }
 
 export function parseJSONDumpRecipes(json: string): Recipe[] {
@@ -72,6 +73,8 @@ export function parseDumpRecipes(lines: string[]): Recipe[] {
     const tail = lines.splice(1, lines.length - 1);
     return tail.map(parseRecipeLine);
   }
+
+  return [];
 }
 
 export async function getRecipesWithJSONDump(args: string[], options?: execOptions): Promise<Recipe[]> {
@@ -105,6 +108,8 @@ export async function getRecipesWithJSONDump(args: string[], options?: execOptio
 
     throw { kind: 'unknown' };
   }
+
+  throw { kind: 'unknown' };
 }
 
 export async function getRecipesWithListDump(args: string[], options?: execOptions): Promise<Recipe[]> {
@@ -143,6 +148,7 @@ export async function getRecipesWithListDump(args: string[], options?: execOptio
 
     throw { kind: 'unknown' };
   }
+  throw { kind: 'unknown' };
 }
 
 /**

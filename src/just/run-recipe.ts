@@ -11,7 +11,7 @@ export interface runRecipeOptions {
  */
 export async function runRecipe(recipe: Recipe, workingDirectory?: string, options?: runRecipeOptions): Promise<RunRecipeResult> {
   try {
-    const args = [];
+    const args: string[] = [];
     const options = {};
     if (recipe.justfile) {
       const dirname = path.dirname(recipe.justfile);

@@ -5,7 +5,10 @@
     "outDir": "out",
     "lib": ["es2020"],
     "sourceMap": true,
-    "rootDir": "src"
+    "rootDir": "src",
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true
   },
   "exclude": ["node_modules", ".vscode-test"]
 }
