@@ -4,5 +4,9 @@ node_modules
 .vsix
 .vscode
 yarn-error.log
+.yarn
+.pnp.cjs
+.pnp.loader.mjs
 
 /just*.vsix
+/coverage/

@@ -1,7 +1,7 @@
 import { CancellationToken, DocumentFormattingEditProvider, FormattingOptions, OutputChannel, ProviderResult, Range, TextDocument, TextEdit } from "vscode";
 import { execJust } from "../just";
 import { unlink, writeFile } from "fs/promises";
-import path = require("path");
+import * as path from 'path';
 
 export class JustDocumentFormattingEditProvider implements DocumentFormattingEditProvider {
 

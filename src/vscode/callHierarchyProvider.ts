@@ -163,7 +163,11 @@ class TokenGraph {
     }
 
     private _addSymbol(symbol: TokenSymbol, line: number) {
-        this.symbols.has(line) ? this.symbols.get(line)?.push(symbol) : this.symbols.set(line, [symbol]);
+        if (this.symbols.has(line)) {
+            this.symbols.get(line)?.push(symbol);
+        } else {
+            this.symbols.set(line, [symbol]);
+        }
     }
 
     private _symbolAtPosition(position: Position): TokenSymbol | undefined {
@@ -180,8 +184,17 @@ class TokenGraph {
     }
 
     private _addEdge(form: TokenSymbol, to: TokenSymbol) {
-        this.incomingVector.has(form.name) ? this.incomingVector.get(form.name)?.push(to) : this.incomingVector.set(form.name, [to]);
-        this.outgoingVector.has(to.name) ? this.outgoingVector.get(to.name)?.push(form) : this.outgoingVector.set(to.name, [form]);
+        if (this.incomingVector.has(form.name)) {
+            this.incomingVector.get(form.name)?.push(to);
+        } else {
+            this.incomingVector.set(form.name, [to]);
+        }
+
+        if (this.outgoingVector.has(to.name)) {
+            this.outgoingVector.get(to.name)?.push(form);
+        } else {
+            this.outgoingVector.set(to.name, [form]);
+        }
     }
 
     incomings(item: CallHierarchyItem): CallHierarchyIncomingCall[] {

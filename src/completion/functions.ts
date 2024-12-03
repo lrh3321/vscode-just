@@ -1,5 +1,5 @@
 
-// https://just.systems/man/en/chapter_32.html
+// https://just.systems/man/en/functions.html
 
 interface justFunction {
     name: string
@@ -358,6 +358,21 @@ export const functions: justFunction[] = [
         minArgc: 2,
         maxArgc: 2,
     },
+    // Datetime
+    {
+        name: "datetime",
+        detail: "Return local time with format.",
+        documentation: `The arguments to datetime and datetime_utc are strftime-style format strings, see the [chrono library docs](https://docs.rs/chrono/latest/chrono/format/strftime/index.html) for details.`,
+        minArgc: 1,
+        maxArgc: 1,
+    },
+    {
+        name: "datetime_utc",
+        detail: "Return UTC time with format.",
+        documentation: `The arguments to datetime and datetime_utc are strftime-style format strings, see the [chrono library docs](https://docs.rs/chrono/latest/chrono/format/strftime/index.html) for details.`,
+        minArgc: 1,
+        maxArgc: 1,
+    },
     // Semantic Versions
     {
         name: "semver_matches",
@@ -395,5 +410,12 @@ export const functions: justFunction[] = [
     {
         name: "home_directory",
         detail: "The user’s home directory.",
+    },
+    // Style
+    {
+        name: "style",
+        detail: "Return a named terminal display attribute escape sequence used by just. Unlike terminal display attribute escape sequence constants, which contain standard colors and styles, style(name) returns an escape sequence used by just itself, and can be used to make recipe output match just’s own output.",
+        minArgc: 1,
+        maxArgc: 1,
     },
 ];

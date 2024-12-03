@@ -42,13 +42,16 @@ currentStatus := `git status -s | wc -l | awk '$1=$1'`
     git push
     git push --tags
 
+pre-release:
+    npx @vscode/vsce package --no-yarn --pre-release
+
 # package in local
 @package: fix
-    npx vsce package
+    npx @vscode/vsce package --no-yarn
 
 # releases on marketplace
 @publish:
-    npx vsce publish
+    npx @vscode/vsce publish
 
 # This does nothing but echoes hello.
 @hello:
@@ -67,3 +70,9 @@ currentStatus := `git status -s | wc -l | awk '$1=$1'`
 [doc('Generate grammar files')]
 @grammar:
     just -d ./src/grammar --justfile src/grammar/justfile
+
+@test:
+    npm run test:unit
+
+@coverage:
+    npm run test:coverage

@@ -1,5 +1,5 @@
 
-// https://just.systems/man/en/chapter_27.html
+// https://just.systems/man/en/settings.html
 
 interface SettingData {
     name: string
@@ -14,7 +14,8 @@ export const booleanSettings: SettingData[] = [
     { name: 'export', detail: 'Export all variables as environment variables.' },
     { name: 'fallback', detail: 'Search justfile in parent directory if the first recipe on the command line is not found.' },
     { name: 'ignore-comments', detail: 'Ignore recipe lines beginning with #.' },
-    { name: 'positional-arguments', detail: 'Pass positional arguments.' }, 
+    { name: 'positional-arguments', detail: 'Pass positional arguments.' },
+    { name: 'unstable', detail: 'Enable unstable features.' },
     { name: 'windows-powershell', detail: 'Use PowerShell on Windows as default shell. (Deprecated. Use windows-shell instead.' },
 ];
 /*
@@ -30,9 +31,11 @@ export const stringSettings: SettingData[] = [
     { name: 'dotenv-filename', detail: 'Load a .env file with a custom name, if present.' },
     { name: 'dotenv-path', detail: 'Load a .env file from a custom path and error if not present. Overrides dotenv-filename.' },
     { name: 'tempdir', detail: 'Create temporary directories in tempdir instead of the system default temporary directory.' },
+    { name: 'working-directory', detail: 'Set the working directory for recipes and backticks, relative to the default working directory.' },
 ];
 
 export const stringArraySettings: SettingData[] = [
+    { name: 'script-interpreter', detail: 'Set command used to invoke recipes with empty [script] attribute.' },
     { name: 'shell', detail: 'Set the command used to invoke recipes and evaluate backticks.' },
     { name: 'windows-shell', detail: 'Set the command used to invoke recipes and evaluate backticks.' },
 ];

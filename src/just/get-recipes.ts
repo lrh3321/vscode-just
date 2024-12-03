@@ -1,8 +1,8 @@
+import { dirname } from 'path';
 import { EOL } from 'os';
-import { Recipe, GetRecipesResult, JustDump, RecipeDump, } from '../types';
-import { parseRecipeLine } from './parse-recipe-line';
-import path = require('path')
 import { JustExecError, execJust, execOptions } from './exec';
+import { parseRecipeLine } from './parse-recipe-line';
+import { Recipe, GetRecipesResult, JustDump, RecipeDump, } from '../types';
 
 let jsonDumpSupported: boolean | undefined = undefined;
 
@@ -16,9 +16,9 @@ export async function getRecipes(justfile?: string, cwd?: string): Promise<GetRe
   const options = {};
 
   if (justfile) {
-    const dirname = path.dirname(justfile);
-    args.push('--working-directory', dirname, '--justfile', justfile);
-    options['cwd'] = dirname;
+    const dir = dirname(justfile);
+    args.push('--working-directory', dir, '--justfile', justfile);
+    options['cwd'] = dir;
   }
 
   if (cwd) {

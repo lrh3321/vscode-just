@@ -2,6 +2,8 @@
 .vscode-test/**
 out/test/**
 out/**/*.map
+out/**/*.test.js
+out/**/*.spec.js
 src/**
 .gitignore
 tsconfig.json
@@ -13,3 +15,11 @@ justfile
 node_modules/antlr4/**
 !node_modules/antlr4/package.json
 !node_modules/antlr4/dist/antlr4.node.cjs
+vitest.config.mts
+coverage
+.yarn
+.pnp.cjs
+.pnp.loader.mjs
+yarn.lock
+
+images/just-demo.webp

@@ -1,6 +1,6 @@
-import { Recipe, RunRecipeResult } from '../types';
+import { dirname } from 'path';
 import { JustExecError, execJust } from './exec';
-import path = require('path')
+import { Recipe, RunRecipeResult } from '../types';
 
 export interface runRecipeOptions {
   args?: string[],
@@ -18,14 +18,14 @@ export async function runRecipe(recipe: Recipe, workingDirectory?: string, optio
 
     const opts = {};
     if (recipe.justfile) {
-      const dirname = path.dirname(recipe.justfile);
+      const dir = dirname(recipe.justfile);
       if (workingDirectory) {
         args.push('--working-directory', workingDirectory);
       } else {
-        args.push('--working-directory', dirname);
+        args.push('--working-directory', dir);
       }
       args.push('--justfile', recipe.justfile);
-      opts['cwd'] = dirname;
+      opts['cwd'] = dir;
     }
     args.push(recipe.name);
 

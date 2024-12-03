@@ -1,13 +1,26 @@
-import * as assert from 'assert';
-import { describe, it } from "mocha";
-import JustfileLexer from './JustfileLexer';
-import { getRecipeName, getRecipes, parseJustfile } from '.';
-import { globSync } from 'glob';
-import { readFileSync } from 'fs';
 import { basename } from 'path';
 import { CharStream } from 'antlr4';
+import { describe, it } from "vitest";
+import { getRecipes, parseJustfile } from '.';
+import { globSync } from 'glob';
+import { readFileSync } from 'fs';
+import * as assert from 'assert';
+import JustfileLexer from './JustfileLexer';
 
 describe("Test JustfileLexer", () => {
+    it("Parse backstick", () => {
+        const justfile = `version := \`sed -En 's/version[[:space:]]*=[[:space:]]*"([^"]+)"/v\\1/p' Cargo.toml\``;
+
+        const lexer = new JustfileLexer(new CharStream(justfile));
+
+        const tokens = lexer.getAllTokens()
+
+        for (let index = 0; index < tokens.length; index++) {
+            const element = tokens[index];
+            // console.log(element.text, element.line, element.column)
+        }
+    })
+
     it("Parse Tokens", () => {
         const justfile = `a:
     echo a
