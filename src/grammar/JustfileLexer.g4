@@ -90,7 +90,7 @@ BACKTICK            : // {this.notIndentedString()}?
 // EOF                 = emitted at the end of the file
 INDENT              :
                       {this.column == 0 && this.braceDepth == 0}?
-                      ' '+ | '\t'+ // emitted when indentation increases
+                      (' ' | '\t')+ // emitted when indentation increases
 ;
 
 // LINE                = emitted before a recipe line

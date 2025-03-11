@@ -106,6 +106,7 @@ conditionBlock: '{' eol? expression '}'
 ;
 
 functionLeft  : NAME LeftParen
+              | 'shell' LeftParen
 ;
 
 functionRight :  RightParen

@@ -56,6 +56,19 @@ export const functions: justFunction[] = [
         minArgc: 1,
         maxArgc: 2,
     },
+    // Executables
+    {
+        name: "require",
+        detail: "Search directories in the PATH environment variable for the executable name and return its full path, or halt with an error if no executable with name exists.",
+        minArgc: 1,
+        maxArgc: 1,
+    },
+    {
+        name: "which",
+        detail: "Search directories in the PATH environment variable for the executable name and return its full path, or the empty string if no executable with name exists. Currently unstable.",
+        minArgc: 1,
+        maxArgc: 1,
+    },
     // Invocation Directory
     {
         name: "invocation_directory",
@@ -310,6 +323,12 @@ export const functions: justFunction[] = [
         name: "path_exists",
         detail: "Returns true if the path points at an existing entity and false otherwise.",
         documentation: `Traverses symbolic links, and returns false if the path is inaccessible or points to a broken symlink.`,
+        minArgc: 1,
+        maxArgc: 1,
+    },
+    {
+        name: "read",
+        detail: "Returns the content of file at path as string.",
         minArgc: 1,
         maxArgc: 1,
     },
