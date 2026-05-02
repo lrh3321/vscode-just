@@ -11,7 +11,8 @@ import {
     SnippetString,
     TextDocument,
 } from "vscode";
-import { attributes, booleanSettingNames, booleanSettings, functions, stringArraySettings, stringSettings } from "../completion";
+
+import { attributes, booleanSettingNames, booleanSettings, constants, functions, stringArraySettings, stringSettings } from "../completion";
 
 export class JustCompletionItemProvider implements CompletionItemProvider {
     provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): ProviderResult<CompletionList<CompletionItem> | CompletionItem[]> {
@@ -31,7 +32,7 @@ export class JustCompletionItemProvider implements CompletionItemProvider {
                         }
                         break;
                     case "+":
-                        return JustCompletionItemProvider.functions();
+                        return JustCompletionItemProvider.values();
                     default:
                         break;
                 }
@@ -62,7 +63,7 @@ export class JustCompletionItemProvider implements CompletionItemProvider {
         //     }
         // }
 
-        return JustCompletionItemProvider.functions();
+        return JustCompletionItemProvider.values();
     }
 
 
@@ -124,6 +125,7 @@ export class JustCompletionItemProvider implements CompletionItemProvider {
 
     static _keywords: CompletionItem[];
     static _attributes: CompletionItem[];
+    static _constants: CompletionItem[];
     static _functions: CompletionItem[];
 
     static keywords(): CompletionItem[] {
@@ -153,6 +155,24 @@ export class JustCompletionItemProvider implements CompletionItemProvider {
 
         return this._attributes;
     }
+
+    static constants(): CompletionItem[] {
+        if (!this._constants) {
+            this._constants = constants.map((constant) => {
+                const item = new CompletionItem(constant.name, CompletionItemKind.Constant);
+                item.detail = constant.value;
+                if (constant.valueOnWindows) {
+                    item.detail = `\`${constant.value}\`, Value on Windows: \`${constant.valueOnWindows}\``;
+                }
+
+                item.insertText = new SnippetString(constant.name);
+                return item;
+            });
+        }
+
+        return this._constants;
+    }
+
     static functions(): CompletionItem[] {
         if (!this._functions) {
             this._functions = functions.map((func) => {
@@ -174,6 +194,13 @@ export class JustCompletionItemProvider implements CompletionItemProvider {
         }
 
         return this._functions;
+    }
+
+    static values(): CompletionItem[] {
+        return [
+            ...this.constants(),
+            ...this.functions(),
+        ];
     }
 }
 

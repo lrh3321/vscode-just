@@ -1,5 +1,7 @@
 
-// https://just.systems/man/en/functions.html
+// https://just.systems/man/en/built-in-functions.html
+// 1.39.0
+
 
 interface justFunction {
     name: string
